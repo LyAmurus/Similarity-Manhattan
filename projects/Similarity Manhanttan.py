@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter import messagebox
 
@@ -31,10 +30,17 @@ def calculate_similarity():
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
+def reset_fields():
+    entry_a.delete(0, tk.END)
+    entry_b.delete(0, tk.END)
+
+def go_back():
+    window.destroy()
+
 # Membuat jendela GUI
 window = tk.Tk()
 window.title("Manhattan Similarity")
-window.geometry("300x200")
+window.geometry("300x250")
 
 # Membuat label dan entry untuk vektor a
 label_a = tk.Label(window, text="Vektor a:")
@@ -48,9 +54,21 @@ label_b.pack()
 entry_b = tk.Entry(window)
 entry_b.pack()
 
+# Membuat frame untuk tombol
+button_frame = tk.Frame(window)
+button_frame.pack()
+
 # Membuat tombol untuk menghitung kesamaan
-calculate_button = tk.Button(window, text="Hitung Similaritas", command=calculate_similarity)
-calculate_button.pack()
+calculate_button = tk.Button(button_frame, text="Hitung Similaritas", command=calculate_similarity)
+calculate_button.pack(side=tk.LEFT)
+
+# Membuat tombol reset
+reset_button = tk.Button(button_frame, text="Reset", command=reset_fields)
+reset_button.pack(side=tk.LEFT)
+
+# Membuat tombol back
+back_button = tk.Button(window, text="Back", command=go_back)
+back_button.pack(pady=10)
 
 # Menjalankan jendela GUI
 window.mainloop()
