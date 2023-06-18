@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
+import csv
 
 def manhattan_similarity(vector1, vector2):
     # Pastikan kedua vektor memiliki panjang yang sama
@@ -34,6 +35,34 @@ def reset_fields():
     entry_a.delete(0, tk.END)
     entry_b.delete(0, tk.END)
 
+def browse_csv():
+    global csv_file
+    csv_file = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+    if csv_file:
+        messagebox.showinfo("Info", f"File CSV yang dipilih: {csv_file}")
+        load_csv_data()
+
+def load_csv_data():
+    try:
+        with open(csv_file, "r") as file:
+            reader = csv.reader(file)
+            data = list(reader)
+
+            if len(data) >= 2:
+                vector_a = list(map(str, data[0]))
+                vector_b = list(map(str, data[1]))
+
+                entry_a.delete(0, tk.END)
+                entry_a.insert(tk.END, ",".join(vector_a))
+
+                entry_b.delete(0, tk.END)
+                entry_b.insert(tk.END, ",".join(vector_b))
+            else:
+                raise ValueError("Data vektor tidak lengkap dalam file CSV")
+
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
+
 def go_back():
     window.destroy()
 
@@ -57,6 +86,10 @@ entry_b.pack()
 # Membuat frame untuk tombol
 button_frame = tk.Frame(window)
 button_frame.pack()
+
+# Membuat tombol untuk memilih file CSV
+browse_button = tk.Button(button_frame, text="Pilih File CSV", command=browse_csv)
+browse_button.pack(side=tk.LEFT)
 
 # Membuat tombol untuk menghitung kesamaan
 calculate_button = tk.Button(button_frame, text="Hitung Similaritas", command=calculate_similarity)
